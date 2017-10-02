@@ -1,0 +1,6 @@
+class HttpRequestHeader
+{
+  public:
+    HttpRequestHeader();
+}
+
