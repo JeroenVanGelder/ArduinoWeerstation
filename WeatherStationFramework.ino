@@ -8,10 +8,10 @@ byte mac[] = { 0x90, 0xA2, 0xDA, 0x0E, 0xF4, 0x66 };
 IPAddress ip(10,42,0,2); // IP of Arduino (web client)
 
 //School
-IPAddress server(145,74,164,95); // IP2 of webserver
-HttpRequest httpRequestGet("GET ","http://145.74.164.95:80/api/meting/ ","HTTP/1.1 ");
-HttpRequest httpRequestPost("POST ","http://145.74.164.95:80/api/meting/ ","HTTP/1.1 ");
-char* ipServer = "145.74.164.95";
+IPAddress server(10,42,0,1); // IP2 of webserver
+HttpRequest httpRequestGet("GET ","http://10.42.0.1/weerstation/api/meting/ ","HTTP/1.1 ");
+HttpRequest httpRequestPost("POST ","http://10.42.0.1/weerstation/api/meting/ ","HTTP/1.1 ");
+char* ipServer = "10.42.0.1";
 
 ////Thuis
 //IPAddress server(192,168,2,68); // IP2 of webserver
@@ -19,7 +19,7 @@ char* ipServer = "145.74.164.95";
 //HttpRequest httpRequestPost("POST ","http://192.168.2.68:80/api/meting/ ","HTTP/1.1 ");
 //char* ipServer = "192.168.2.68";
 
-Meting meting = {"J1", 21.3, 60.7}; 
+Meting meting = {"J1","tijd", 21.3, 60.7}; 
 
 EthernetClient client;
 

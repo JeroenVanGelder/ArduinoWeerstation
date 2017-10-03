@@ -23,7 +23,7 @@ String getTime() {
   return timeClient.getFormattedTime();
 }
 
-String getFormattedString(){
+char* getFormattedString(){
   return "2015-09-22T19:14:55.7482026Z";
 }
 

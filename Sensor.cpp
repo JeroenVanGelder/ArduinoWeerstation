@@ -6,11 +6,11 @@ unsigned int readTempValueRAW(int pin) {
   return analogRead(thermistorPin);
 }
 
-float thermistorValue(int pin) {
+double thermistorValue(int pin) {
   return ( 1024.0 * RESISTOR / (float)readTempValueRAW(pin) ) - RESISTOR ; //voltage divider Rtherm = ((Ui/Uo)*R)-R
 }
 
-float readTempValue(int pin) {
+double readTempValue(int pin) {
   // using the Steinhart-Hart equation http://en.wikipedia.org/wiki/Thermistor
   // 1/T= a + b*ln(R/Rt) + c*ln(R/Rt)^2 + d*ln(R/Rt)^3
   float logR; float temp;
@@ -20,7 +20,7 @@ float readTempValue(int pin) {
   return temp;
 }
 
-float readLightDepedentResistor(int pin) {
+double readLightDepedentResistor(int pin) {
   if (pin != -1)
     return analogRead(pin);
   return analogRead(LDRsensor);

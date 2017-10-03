@@ -8,4 +8,4 @@ void endTime() ;
 
 String getTime();
 
-String getFormattedString();
+char* getFormattedString();

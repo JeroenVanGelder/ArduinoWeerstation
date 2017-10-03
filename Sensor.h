@@ -13,8 +13,8 @@ const int LDRsensor = A1;
 
 unsigned int readTempValueRAW(int pin);
 
-float thermistorValue(int pin);
+double thermistorValue(int pin);
 
-float readTempValue(int pin);
+double readTempValue(int pin);
 
-float readLightDepedentResistor(int pin);
+double readLightDepedentResistor(int pin);
