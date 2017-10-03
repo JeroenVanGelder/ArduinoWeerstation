@@ -2,6 +2,8 @@
 #include <Ethernet2.h>
 #include "HttpRequest.h"
 #include "Meting.h"
+#include "Time.h"
+
 // check your ethernet shield
 // Make sure it's unique
 byte mac[] = { 0x90, 0xA2, 0xDA, 0x0E, 0xF4, 0x66 };
@@ -19,13 +21,14 @@ char* ipServer = "145.74.164.95";
 //HttpRequest httpRequestPost("POST ","http://192.168.2.68:80/api/meting/ ","HTTP/1.1 ");
 //char* ipServer = "192.168.2.68";
 
-Meting meting = {"J1", 21.3, 60.7}; 
 
 EthernetClient client;
 
 void setup() {
   Serial.begin(9600);
-  Ethernet.begin(mac, ip);
+  Ethernet.begin(mac, ip);  
+  startTime();
+
   Serial.println("Starting");
   
   //Setup for Test for Get
@@ -36,8 +39,10 @@ void setup() {
   httpRequestPost.addRequestHeader("Host: ",ipServer);
   httpRequestPost.addRequestHeader("Connection: ","close");
   httpRequestPost.addRequestHeader("Content-Type: ","application/json");
-  httpRequestPost.addRequestHeader("Content-Length: ","64");
-  httpRequestPost.parseMetingToJsonBody(meting);
+  
+  char* dateTime = getTime();
+  Meting meting = {"J1", dateTime,21.3, 60.7}; 
+  httpRequestPost.addMetingToBody(meting);
 }
 
 void loop() {

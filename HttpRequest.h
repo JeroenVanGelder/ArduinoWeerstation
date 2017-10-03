@@ -13,7 +13,8 @@ class HttpRequest
     
     void addRequestHeader(char *key, char*value);
     void sendRequest(EthernetClient client);
-    void parseMetingToJsonBody(Meting inputMeting);
+    void addMetingToBody(Meting inputMeting);
+    
     
     
   private:
@@ -36,6 +37,7 @@ class HttpRequest
     void addRequestBodyLine(char *inputRequestBodyLine);
     void sendRequestHeader(HttpRequestHeader header, EthernetClient client);
     void sendRequestBody(EthernetClient client);
+    char* parseMetingToJsonBody(Meting inputMeting);
     
 };
 

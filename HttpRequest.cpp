@@ -38,14 +38,26 @@ void HttpRequest::sendRequestHeader(HttpRequestHeader header, EthernetClient cli
     client.print("\n");
 }
 
-void HttpRequest::parseMetingToJsonBody(Meting inputMeting){
-  requestBody="{\"weatherstation\": \"J1\",\"temperature\": 25.4,\"illuminance\": 66.6}\n";
-  bodySize=1;
+void HttpRequest::addMetingToBody(Meting inputMeting){
+  char* metingJson = parseMetingToJsonBody(inputMeting);
+  bodySize=strlen(metingJson);
+  
+  requestBody = metingJson;
+  
+  char* sizeString = new char[4];  
+  itoa(bodySize,sizeString,10);
+  
+  addRequestHeader("Content-Length: ", sizeString);
+}
+
+char* HttpRequest::parseMetingToJsonBody(Meting inputMeting){
+  return "{\"weatherstation\": \"J21\",\"temperature\": 25.4,\"illuminance\": 6436.6}\n";
 }
 
 void HttpRequest::addRequestHeader(char *key, char *value){
   httpRequestHeader[ammountOfHeaders] = HttpRequestHeader{key,value};
-  if(ammountOfHeaders < HEADERSIZE);
+
+     if(ammountOfHeaders < HEADERSIZE);
     ammountOfHeaders ++;
 }
 
