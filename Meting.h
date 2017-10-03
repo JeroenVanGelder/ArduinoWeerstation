@@ -2,9 +2,10 @@
 #define Meting_h
 
 struct Meting {
-      char* weatherstation;
-      double temperature;
-      double illuminance;
+  char* Weatherstation;
+  char* Timestamp;
+  double Temperature;
+  double Illuminance;
 };
 
 #endif
