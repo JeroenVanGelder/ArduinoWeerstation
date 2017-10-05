@@ -8,6 +8,7 @@
 class HttpRequest
 {
   public:
+    HttpRequest();
     HttpRequest(char inputMethod[10], char inputPath[100], char inputProtocol[10]);
     HttpRequest(char inputMethod[10], char inputPath[100], char inputProtocol[10], char *inputRequestBody);
     

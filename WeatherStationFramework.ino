@@ -1,91 +1,24 @@
 #include <SPI.h>
 #include <Ethernet2.h>
 #include "HttpRequest.h"
+#include "HttpHandler.h"
 #include "Meting.h"
 #include "Time.h"
+#include "config.h"
 
-// check your ethernet shield
-// Make sure it's unique
-byte mac[] = { 0x90, 0xA2, 0xDA, 0x0E, 0xF4, 0x66 };
-IPAddress ip(10,42,0,2); // IP of Arduino (web client)
-
-//School
-IPAddress server(10,87,2,148); // IP2 of webserver
-HttpRequest httpRequestGet("GET ","http://10.87.2.148:80/api/meting/ ","HTTP/1.1 ");
-HttpRequest httpRequestPost("POST ","http://10.87.2.148:80/api/meting/ ","HTTP/1.1 ");
-char* ipServer = "10.87.2.148";
-
-////Thuis
-//IPAddress server(192,168,2,68); // IP2 of webserver
-//HttpRequest httpRequestGet("GET ","http://192.168.2.68:80/api/meting/ ","HTTP/1.1 ");
-//HttpRequest httpRequestPost("POST ","http://192.168.2.68:80/api/meting/ ","HTTP/1.1 ");
-//char* ipServer = "192.168.2.68";
-
-EthernetClient client;
+HttpRequest httpRequestPost("POST ","http://145.74.165.0:80/api/meting/ ","HTTP/1.1 ");
+HttpHandler httpHandler;
 
 void setup() {
   Serial.begin(9600);
-  Ethernet.begin(mac, ip);  
-  
-  startTime();
-
   Serial.println("Starting");
-  
-  //Setup for Test for Get
-  httpRequestGet.addRequestHeader("Host: ",ipServer);
-  httpRequestGet.addRequestHeader("Connection: ","close");
-
-  //Setup for Test for Post
-  httpRequestPost.addRequestHeader("Host: ",ipServer);
-  httpRequestPost.addRequestHeader("Connection: ","close");
-  httpRequestPost.addRequestHeader("Content-Type: ","application/json");
-  
-  char* dateTime = getTime();
-  Meting meting = {"J1", dateTime,21.3, 60.7}; 
-  httpRequestPost.addMetingToBody(meting);
+//  startTime();
+  httpHandler = HttpHandler(httpRequestPost);
 }
 
 void loop() {
-  Serial.println("\n");
-  Serial.println("Connecting...");
-    
-  if (client.connect(server, 80)) {
-    
-    Serial.println("Connected to webserver");
-    //Test for Get
-//    httpRequestGet.sendRequest(client);
-//    getResponse();
-
-//    //Test for Post
-    httpRequestPost.sendRequest(client);
-    getResponse();
-  }
-  else {
-    Serial.println("Connection failed");
-  }
+  Meting meting = {"J2","timestamp",44.3, 34.7}; 
+  httpHandler.sendMeting(meting);
   
-  Serial.println("The end. Now wait for 1 minute");
-  delay(60000);
-
+  delay(6000);
 }
-
-void getResponse(){
-  while (!client.available()) {
-      delay(5); // let's take five. Here we should check for time out
-      Serial.print(".");
-    }
-    Serial.println("Response received:");
-    while (client.available()) {
-      char c = client.read();
-      Serial.print(c);
-      delay(1); // give input some time do to it's thingpie.
-    }
-    Serial.println();
-    Serial.println("Response read, now we can disconnect.");
-    if (!client.connected()) {
-      Serial.println("disconnecting...");
-      client.stop();
-    }
-    Serial.println("We are disconnected");
-}
-

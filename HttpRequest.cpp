@@ -3,6 +3,8 @@
 #include "HttpRequest.h"
 #include <string.h>
 
+HttpRequest::HttpRequest(){}
+
 HttpRequest::HttpRequest(char inputMethod[20], char inputPath[100], char inputProtocol[10]){
   httpRequestLine = {inputMethod, inputPath, inputProtocol};
   ammountOfHeaders = 0;
@@ -30,7 +32,6 @@ void  HttpRequest::sendRequest(EthernetClient client){
   
   if(bodySize > 0){
     client.println(requestBody); 
-    
   }
 }
 
@@ -41,6 +42,7 @@ void HttpRequest::sendRequestHeader(HttpRequestHeader header, EthernetClient cli
 }
 
 void HttpRequest::addMetingToBody(Meting inputMeting){
+
   char* metingJson = parseMetingToJsonBody(inputMeting);
   bodySize=strlen(metingJson);
   
@@ -48,22 +50,21 @@ void HttpRequest::addMetingToBody(Meting inputMeting){
   
   char* sizeString = new char[4];  
   itoa(bodySize,sizeString,10);
-  
+
   addRequestHeader("Content-Length: ", sizeString);
 }
 
 char* HttpRequest::parseMetingToJsonBody(Meting inputMeting){
-  char* json = new char[200];
-  //char* json = "{\"weatherstation\": \"J21\",\"temperature\": 25.4,\"illuminance\": 6436.6}\n";
+  char* json = new char[100];
+ 
+  StaticJsonBuffer<100> jsonBuffer;
   
-  StaticJsonBuffer<200> jsonBuffer;
-
   JsonObject& root = jsonBuffer.createObject();
-  root["weatherstation"] = "j21";
-  root["temperature"]=35.4;
-  root["illuminance"]=535;
-  root.printTo(json, 200);
-  
+  root["weatherstation"] = inputMeting.Weatherstation;
+  //root["Timestamp"] = inputMeting.Timestamp;
+  root["temperature"]=inputMeting.Temperature;
+  root["illuminance"]=inputMeting.Illuminance;
+  root.printTo(json, 100);
   
   return json;
 }
