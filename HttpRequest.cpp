@@ -1,3 +1,5 @@
+#include <Stepper.h>
+#include <ArduinoJson.h>
 #include "HttpRequest.h"
 #include <string.h>
 
@@ -51,7 +53,19 @@ void HttpRequest::addMetingToBody(Meting inputMeting){
 }
 
 char* HttpRequest::parseMetingToJsonBody(Meting inputMeting){
-  return "{\"weatherstation\": \"J21\",\"temperature\": 25.4,\"illuminance\": 6436.6}\n";
+  char* json = new char[200];
+  //char* json = "{\"weatherstation\": \"J21\",\"temperature\": 25.4,\"illuminance\": 6436.6}\n";
+  
+  StaticJsonBuffer<200> jsonBuffer;
+
+  JsonObject& root = jsonBuffer.createObject();
+  root["weatherstation"] = "j21";
+  root["temperature"]=35.4;
+  root["illuminance"]=535;
+  root.printTo(json, 200);
+  
+  
+  return json;
 }
 
 void HttpRequest::addRequestHeader(char *key, char *value){
