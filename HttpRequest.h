@@ -9,14 +9,12 @@ class HttpRequest
 {
   public:
     HttpRequest();
-    HttpRequest(char inputMethod[10], char inputPath[100], char inputProtocol[10]);
-    HttpRequest(char inputMethod[10], char inputPath[100], char inputProtocol[10], char *inputRequestBody);
-    
-    void addRequestHeader(char *key, char*value);
-    void sendRequest(EthernetClient client);
+    HttpRequest(char* inputMethod, char* inputPath, char* inputProtocol);
+        
+    void addRequestHeader(char *key, char* value);
+    void sendRequest(EthernetClient *client);
     void addMetingToBody(Meting inputMeting);
-    
-    
+    void freeRequest();
     
   private:
     struct HttpRequestLine {
@@ -36,9 +34,9 @@ class HttpRequest
     int bodySize;
     
     void addRequestBodyLine(char *inputRequestBodyLine);
-    void sendRequestHeader(HttpRequestHeader header, EthernetClient client);
-    void sendRequestBody(EthernetClient client);
+    void sendRequestHeader(HttpRequestHeader header, EthernetClient *client);
     char* parseMetingToJsonBody(Meting inputMeting);
+    
     
 };
 

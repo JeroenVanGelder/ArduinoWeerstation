@@ -5,40 +5,33 @@
 
 HttpRequest::HttpRequest(){}
 
-HttpRequest::HttpRequest(char inputMethod[20], char inputPath[100], char inputProtocol[10]){
+HttpRequest::HttpRequest(char* inputMethod, char* inputPath, char* inputProtocol){
   httpRequestLine = {inputMethod, inputPath, inputProtocol};
   ammountOfHeaders = 0;
   bodySize = 0;
 }
 
-HttpRequest::HttpRequest(char inputMethod[20], char inputPath[100], char inputProtocol[10], char *inputRequestBody){
-  httpRequestLine = {inputMethod, inputPath, inputProtocol};
-  requestBody = inputRequestBody;
-  ammountOfHeaders = 0;
-  bodySize = 0;
-}
-
-void  HttpRequest::sendRequest(EthernetClient client){
-  client.println();
-  client.print(httpRequestLine.method);
-  client.print(httpRequestLine.path);
-  client.print(httpRequestLine.protocol);
-  client.print("\n");
+void  HttpRequest::sendRequest(EthernetClient *client){
+  client->println();
+  client->print(httpRequestLine.method);
+  client->print(httpRequestLine.path);
+  client->print(httpRequestLine.protocol);
+  client->print("\n");
   
   for(int i = 0; i < ammountOfHeaders; i++){
     sendRequestHeader(httpRequestHeader[i], client);    
   }
-  client.println(); // always one empty line between headers and content
+  client->println(); // always one empty line between headers and content
   
   if(bodySize > 0){
-    client.println(requestBody); 
+    client->println(requestBody); 
   }
 }
 
-void HttpRequest::sendRequestHeader(HttpRequestHeader header, EthernetClient client){
-    client.print(header.key);
-    client.print(header.value);
-    client.print("\n");
+void HttpRequest::sendRequestHeader(HttpRequestHeader header, EthernetClient *client){
+    client->print(header.key);
+    client->print(header.value);
+    client->print("\n");
 }
 
 void HttpRequest::addMetingToBody(Meting inputMeting){
@@ -74,5 +67,17 @@ void HttpRequest::addRequestHeader(char *key, char *value){
 
      if(ammountOfHeaders < HEADERSIZE);
     ammountOfHeaders ++;
+}
+
+void HttpRequest::freeRequest(){
+  //Alleen de onderste werkt op dit moment. Hier wordt aan gewerkt
+//  free(httpRequestLine.method);
+//  free(httpRequestLine.path);
+//  free(httpRequestLine.protocol);
+//  for(int i = 0; i < ammountOfHeaders; i++){
+//    free(httpRequestHeader[i].key);
+//    free(httpRequestHeader[i].value);    
+//  }
+  free(requestBody);
 }
 

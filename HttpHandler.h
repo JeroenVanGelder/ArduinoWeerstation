@@ -21,6 +21,7 @@ class HttpHandler
     EthernetClient client;
 
     void printResponseToSerial();
+    void freeRequest();
 };
 
 #endif

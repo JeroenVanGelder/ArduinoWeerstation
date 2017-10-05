@@ -3,7 +3,12 @@
 #include "config.h"
 
 HttpHandler::HttpHandler(){
-
+  httpRequest = HttpRequest("POST ","http://145.74.165.0:80/api/meting/ ","HTTP/1.1 ");
+;
+  //mac = { 0x90, 0xA2, 0xDA, 0x0E, 0xF4, 0x66 };
+  ip = IPAddress(10,42,0,2);
+  server = IPAddress(192,168,2,68);
+  Ethernet.begin(mac, ip);
 }
 
 HttpHandler::HttpHandler(HttpRequest inputRequest){
@@ -32,12 +37,17 @@ void HttpHandler::sendMeting(Meting meting){
     Serial.println("Connected to webserver");
 
 //    //Test for Post
-    httpRequest.sendRequest(client);
+    httpRequest.sendRequest(&client);
     printResponseToSerial();
   }
   else {
     Serial.println("Connection failed");
   }
+  freeRequest();
+}
+
+void HttpHandler::freeRequest(){
+  httpRequest.freeRequest();
 }
 
 void HttpHandler::printResponseToSerial(){
