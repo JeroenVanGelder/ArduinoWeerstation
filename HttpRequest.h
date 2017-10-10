@@ -4,18 +4,22 @@
 
 #include <Ethernet2.h>
 #include "Meting.h"
+#include "Util.h"
+
 
 class HttpRequest
 {
   public:
     HttpRequest();
     HttpRequest(char* inputMethod, char* inputPath, char* inputProtocol);
-        
+
     void addRequestHeader(char *key, char* value);
     void sendRequest(EthernetClient *client);
     void addMetingToBody(Meting inputMeting);
+    void addSignInToBody();
+
     void freeRequest();
-    
+
   private:
     struct HttpRequestLine {
       char *method;
@@ -23,7 +27,7 @@ class HttpRequest
       char *protocol;
     } httpRequestLine;
 
-    struct HttpRequestHeader{
+    struct HttpRequestHeader {
       char *key;
       char *value;
     } httpRequestHeader[HEADERSIZE];
@@ -32,12 +36,18 @@ class HttpRequest
 
     int ammountOfHeaders;
     int bodySize;
-    
+
     void addRequestBodyLine(char *inputRequestBodyLine);
     void sendRequestHeader(HttpRequestHeader header, EthernetClient *client);
     char* parseMetingToJsonBody(Meting inputMeting);
-    
-    
+
+    char* parseSignInToJsonBody(int getal);
+    Util util;
+
+
+
+
+
 };
 
 #endif

@@ -12,12 +12,13 @@ void setup() {
   Serial.println(F("Starting"));
   Serial.print(F("freeMemory()="));
   Serial.println(freeMemory());
-//  startTime();
-  
+  //  startTime();
+
 }
 
 void loop() {
   HttpHandler httpHandler = HttpHandler();
+  httpHandler.sendSignIn();
   Meting meting = {"J2","timestamp",44.3, 34.7}; 
   httpHandler.sendMeting(meting);
   Serial.print(F("freeMemory()="));
