@@ -9,8 +9,8 @@
 
 void setup() {
   Serial.begin(9600);
-  Serial.println("Starting");
-  Serial.print("freeMemory()=");
+  Serial.println(F("Starting"));
+  Serial.print(F("freeMemory()="));
   Serial.println(freeMemory());
 //  startTime();
   
@@ -20,7 +20,7 @@ void loop() {
   HttpHandler httpHandler = HttpHandler();
   Meting meting = {"J2","timestamp",44.3, 34.7}; 
   httpHandler.sendMeting(meting);
-  Serial.print("freeMemory()=");
+  Serial.print(F("freeMemory()="));
   Serial.println(freeMemory());
-  delay(6000);
+  delay(60000);
 }

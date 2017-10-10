@@ -3,29 +3,23 @@
 #include "config.h"
 
 HttpHandler::HttpHandler(){
-  httpRequest = HttpRequest("POST ","http://145.74.165.0:80/api/meting/ ","HTTP/1.1 ");
-;
-  //mac = { 0x90, 0xA2, 0xDA, 0x0E, 0xF4, 0x66 };
-  ip = IPAddress(10,42,0,2);
-  server = IPAddress(192,168,2,68);
+  ip.fromString(arduinoIP);
+  server.fromString(serverIP);
   Ethernet.begin(mac, ip);
 }
 
 HttpHandler::HttpHandler(HttpRequest inputRequest){
   httpRequest = inputRequest;
-  //mac = { 0x90, 0xA2, 0xDA, 0x0E, 0xF4, 0x66 };
-  ip = IPAddress(10,42,0,2);
-  server = IPAddress(192,168,2,68);
+  ip.fromString(arduinoIP);
+  server.fromString(serverIP);
   Ethernet.begin(mac, ip);
 }
 
 void HttpHandler::sendMeting(Meting meting){
-  
-  httpRequest = HttpRequest("POST ","http://192.168.2.68:80/api/meting/ ","HTTP/1.1 ");
+  httpRequest = HttpRequest("POST ","/api/meting/ ","HTTP/1.1 ");
   
   httpRequest.addRequestHeader("Host: ",serverIP);
   httpRequest.addRequestHeader("Connection: ","close");
-  httpRequest.addRequestHeader("Content-Type: ","application/json");
   
   httpRequest.addMetingToBody(meting);
 
@@ -39,10 +33,10 @@ void HttpHandler::sendMeting(Meting meting){
 //    //Test for Post
     httpRequest.sendRequest(&client);
     printResponseToSerial();
-  }
-  else {
+  }else {
     Serial.println("Connection failed");
   }
+  
   freeRequest();
 }
 
