@@ -2,41 +2,39 @@
 #include "HttpHandler.h"
 #include "config.h"
 
-HttpHandler::HttpHandler(){
-  httpRequest = HttpRequest("POST ","http://145.74.165.0:80/api/meting/ ","HTTP/1.1 ");
-;
-  //mac = { 0x90, 0xA2, 0xDA, 0x0E, 0xF4, 0x66 };
-  ip = IPAddress(10,42,0,2);
-  server = IPAddress(192,168,2,68);
+HttpHandler::HttpHandler() {
+
+  // mac = { 0x90, 0xA2, 0xDA, 0x0E, 0xF4, 0x66 };
+  ip = IPAddress(192, 168, 137, 2);
+  server = IPAddress(192, 168, 137, 1 );
   Ethernet.begin(mac, ip);
 }
 
-HttpHandler::HttpHandler(HttpRequest inputRequest){
+HttpHandler::HttpHandler(HttpRequest inputRequest) {
   httpRequest = inputRequest;
-  //mac = { 0x90, 0xA2, 0xDA, 0x0E, 0xF4, 0x66 };
-  ip = IPAddress(10,42,0,2);
-  server = IPAddress(192,168,2,68);
+  //  mac = { 0x90, 0xA2, 0xDA, 0x0E, 0xF4, 0x66 };
+  ip = IPAddress(192, 168, 137, 2);
+  server = IPAddress(192, 168, 137, 1 );
   Ethernet.begin(mac, ip);
 }
 
-void HttpHandler::sendMeting(Meting meting){
-  
-  httpRequest = HttpRequest("POST ","http://192.168.2.68:80/api/meting/ ","HTTP/1.1 ");
-  
-  httpRequest.addRequestHeader("Host: ",serverIP);
-  httpRequest.addRequestHeader("Connection: ","close");
-  httpRequest.addRequestHeader("Content-Type: ","application/json");
-  
+void HttpHandler::sendMeting(Meting meting) {
+  httpRequest = HttpRequest("POST ", "http://192.168.2.68:80/api/meting/ ", "HTTP/1.1 ");
+
+  httpRequest.addRequestHeader("Host: ", serverIP);
+  httpRequest.addRequestHeader("Connection: ", "close");
+  httpRequest.addRequestHeader("Content-Type: ", "application/json");
+
   httpRequest.addMetingToBody(meting);
 
   Serial.println("\n");
   Serial.print("Connecting to ");
-  Serial.print(server);  
+  Serial.print(server);
   if (client.connect(server, 80)) {
-    
+
     Serial.println("Connected to webserver");
 
-//    //Test for Post
+    //    //Test for Post
     httpRequest.sendRequest(&client);
     printResponseToSerial();
   }
@@ -46,26 +44,61 @@ void HttpHandler::sendMeting(Meting meting){
   freeRequest();
 }
 
-void HttpHandler::freeRequest(){
+void HttpHandler::freeRequest() {
   httpRequest.freeRequest();
 }
 
-void HttpHandler::printResponseToSerial(){
+void HttpHandler::printResponseToSerial() {
   while (!client.available()) {
-      delay(5); // let's take five. Here we should check for time out
-      Serial.print(".");
-    }
-    Serial.println("Response received:");
-    while (client.available()) {
-      char c = client.read();
-      Serial.print(c);
-      delay(1); // give input some time do to it's thingpie.
-    }
-    Serial.println();
-    Serial.println("Response read, now we can disconnect.");
-    if (!client.connected()) {
-      Serial.println("disconnecting...");
-      client.stop();
-    }
+    delay(5); // let's take five. Here we should check for time out
+    Serial.print(".");
+  }
+  Serial.println("Response received:");
+  while (client.available()) {
+    char c = client.read();
+    Serial.print(c);
+    delay(1); // give input some time do to it's thingpie.
+  }
+  Serial.println();
+  Serial.println("Response read, now we can disconnect.");
+  if (!client.connected()) {
+    Serial.println("disconnecting...");
+    client.stop();
+      Serial.println("disconnected...");
+
+  }
 }
 
+/*
+   temp for sign in functionaliteit
+
+*/
+
+void HttpHandler::sendSignIn() {
+
+  httpRequest = HttpRequest("POST ", "http://192.168.137.1/arne/SignIn ", "HTTP/1.1 ");
+
+  httpRequest.addRequestHeader("Host: ", serverIP);
+  httpRequest.addRequestHeader("Connection: ", "close");
+  httpRequest.addRequestHeader("Content-Type: ", "application/json");
+
+  httpRequest.addSignInToBody();
+
+  Serial.println("\n");
+  Serial.print("Connecting to ");
+  Serial.print(server);
+  if (client.connect(server, 80)) {
+
+    Serial.println("Connected to webserver");
+
+    //    //Test for Post
+    httpRequest.sendRequest(&client);
+    printResponseToSerial();
+//    util.writeId(13);
+  }
+  else {
+    Serial.println("Connection failed");
+  }
+  freeRequest();
+  Serial.print("free ready");
+}

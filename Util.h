@@ -5,14 +5,12 @@
 class Util { 
   public : 
     Util(); 
+   
     int getId(); 
-    void registerWeatherstation(); 
-    void ensureId(); 
     int* getIp(); 
-    void getResponse2(); 
  
-  private: 
-    void writeId(); 
+//  private: 
+    void writeId(int id); 
     void writeIp(int* myIp); 
  
 }; 

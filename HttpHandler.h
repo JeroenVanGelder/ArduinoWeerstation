@@ -4,6 +4,8 @@
 #include <Ethernet2.h>
 #include "Meting.h"
 #include "HttpRequest.h"
+#include "Util.h"
+
 
 class HttpHandler
 {
@@ -12,6 +14,8 @@ class HttpHandler
     HttpHandler(HttpRequest inputRequest);
     
     void sendMeting(Meting meting);
+
+    void sendSignIn();
     
   private:
     HttpRequest httpRequest;
@@ -19,6 +23,7 @@ class HttpHandler
     IPAddress ip;
     IPAddress server;
     EthernetClient client;
+    Util util;
 
     void printResponseToSerial();
     void freeRequest();
