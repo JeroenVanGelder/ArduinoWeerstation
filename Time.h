@@ -6,6 +6,6 @@ void updateTime();
 
 void endTime() ;
 
-String getTime();
+char* getTime();
 
-String getFormattedString();
+char* getFormattedString();

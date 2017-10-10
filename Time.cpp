@@ -6,24 +6,29 @@ EthernetUDP udp;
 NTPClient timeClient(udp, "europe.pool.ntp.org", 7200, 60000);
 
 void startTime() {
+  Serial.print("getting time, ");
   timeClient.begin();
+  Serial.print("got time, ");
+  updateTime();
+  Serial.print("updated time\n");
 }
 
 void updateTime() {
-  timeClient.update();
-  timeClient.update();
-  timeClient.update();
-  timeClient.update();
+//  timeClient.update();
+//  timeClient.update();
+//  timeClient.update();
+//  timeClient.update();
 }
+
 void endTime() {
   timeClient.end();
 }
 
-String getTime() {
-  return timeClient.getFormattedTime();
+char* getTime() {
+  return getFormattedString();
 }
 
-String getFormattedString(){
-  return "2015-09-22T19:14:55.7482026Z";
+char* getFormattedString(){
+  return ("%ul",timeClient.getEpochTime());
 }
 
