@@ -1,4 +1,4 @@
-#include <SPI.h>
+  #include <SPI.h>
 #include <Ethernet2.h>
 #include <MemoryFree.h>
 #include "HttpRequest.h"
@@ -23,5 +23,5 @@ void loop() {
   httpHandler.sendMeting(meting);
   Serial.print(F("freeMemory()="));
   Serial.println(freeMemory());
-  delay(60000);
+  delay(6000);
 }

@@ -26,6 +26,7 @@ class HttpHandler
     Util util;
 
     void printResponseToSerial();
+    void saveSignInResponse();
     void freeRequest();
 };
 
