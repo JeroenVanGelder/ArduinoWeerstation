@@ -11,7 +11,7 @@ class Util {
  
 //  private: 
     void writeId(int id); 
-    void writeIp(int* myIp); 
+    void writeIp(char* myIp); 
  
 }; 
 #endif 

@@ -1,5 +1,9 @@
 #include "HttpHandler.h"
 #include "config.h"
+#include "Util.h"
+#include <ArduinoJson.h>
+
+Util util;
 
 HttpHandler::HttpHandler() {
   ip.fromString(arduinoIP);
@@ -26,10 +30,8 @@ void HttpHandler::sendMeting(Meting meting) {
   Serial.print("Connecting to ");
   Serial.print(server);
   if (client.connect(server, 80)) {
-
     Serial.println("Connected to webserver");
 
-    //    //Test for Post
     httpRequest.sendRequest(&client);
     printResponseToSerial();
   } else {
@@ -64,11 +66,6 @@ void HttpHandler::printResponseToSerial() {
   }
 }
 
-/*
-   temp for sign in functionaliteit
-
-*/
-
 void HttpHandler::sendSignIn() {
 
   httpRequest = HttpRequest("POST ", "/arne/SignIn ", "HTTP/1.1 ");
@@ -83,13 +80,9 @@ void HttpHandler::sendSignIn() {
   Serial.print("Connecting to ");
   Serial.print(server);
   if (client.connect(server, 80)) {
-
     Serial.println("Connected to webserver");
-
-    //    //Test for Post
     httpRequest.sendRequest(&client);
     saveSignInResponse();
-    //    util.writeId(13);
   }
   else {
     Serial.println("Connection failed");
@@ -98,57 +91,87 @@ void HttpHandler::sendSignIn() {
   Serial.print("free ready");
 }
 
+void HttpHandler::parseJson(String json) {
+  DynamicJsonBuffer jsonBuffer;
+  JsonObject& root = jsonBuffer.parseObject(json);
+  if (!root.success()) {
+    Serial.println("parseObject() failed");
+    return;
+  }
+  int id = root["Id"];
+  char* ip = root["IpAddress"];
+  char* name = root["Name"];
+
+  util.writeId(id);
+  util.writeIp(ip);
+}
 void HttpHandler::saveSignInResponse() {
-  /*todo
-
-
-
-    JsonObject& root = jsonBuffer.parseObject(json);
-    if (!root.success()) {
-      Serial.println("parseObject() failed");
-      return;
-    }
-     const char* sensor = root["sensor"];
-    long time = root["time"];
-    double latitude = root["data"][0];
-    double longitude = root["data"][1];
-
-    // Print values.
-    Serial.println(sensor);
-    Serial.println(time);
-    Serial.println(latitude, 6);
-    Serial.println(longitude, 6);
-  */
-
   while (!client.available()) {
     delay(5); // let's take five. Here we should check for time out
-    Serial.print(".");
+    Serial.print(F("."));
   }
-  Serial.println("Response received:");
-  String response = "niks";
-  bool boody = false;
+  Serial.println(F("Response received:"));
 
-
+  bool bodyIsHere = false;
+  String body;
+  char newRule;
   while (client.available()) {
-    char c = client.read();
+    char   c = client.read();
+    if (bodyIsHere)
+      body += c;
 
-
-    Serial.print(c);
-    response += c + "0";
+    if (c == '\r')
+      if (newRule == '\n')
+        bodyIsHere = true;
+    newRule = c;
 
     delay(1); // give input some time do to it's thingpie.
-
-
   }
-  Serial.println(response);
+  parseJson(body);
 
-  // praseJSON
   Serial.println();
-  Serial.println("Response read, now we can disconnect.");
+  Serial.println(F("Response read, now we can disconnect."));
   if (!client.connected()) {
-    Serial.println("disconnecting...");
+    Serial.println(F("disconnecting..."));
     client.stop();
-    Serial.println("disconnected...");
+    Serial.println(F("disconnected..."));
 
   }
+}
+
+void HttpHandler::receiveNewConfig() {
+
+  Ethernet.begin(mac, ip);
+  Serial.println(Ethernet.localIP());
+
+  EthernetServer ConfigServer(80);
+  ConfigServer.begin();
+
+  EthernetClient ConfigClient = ConfigServer.available();
+  Serial.println(ConfigClient);
+  while (!ConfigClient) {}
+  if (ConfigClient) {
+    Serial.println("if");
+
+    while (ConfigClient.connected()) {
+      Serial.println("while");
+      if (ConfigClient.available()) {
+
+
+        Serial.print(ConfigClient.read());
+      }
+      ConfigClient.println("HTTP/1.1 404 OK");
+      ConfigClient.println("Content-Type: text/html");
+      ConfigClient.println("Connnection: close");
+      ConfigClient.println();
+      ConfigClient.println("<!DOCTYPE HTML>");
+      ConfigClient.println("<html><body>foutje</body></html>");
+    }
+
+
+  }
+  delay(1);
+
+  ConfigClient.stop();
+  Serial.println("Client disonnected");
 }

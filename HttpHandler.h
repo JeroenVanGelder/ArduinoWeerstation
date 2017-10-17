@@ -16,7 +16,8 @@ class HttpHandler
     void sendMeting(Meting meting);
 
     void sendSignIn();
-    
+
+    void receiveNewConfig();
   private:
     HttpRequest httpRequest;
     byte mac[6] = { 0x90, 0xA2, 0xDA, 0x0E, 0xF4, 0x66 };
@@ -28,6 +29,7 @@ class HttpHandler
     void printResponseToSerial();
     void saveSignInResponse();
     void freeRequest();
+    void parseJson(String json);
 };
 
 #endif

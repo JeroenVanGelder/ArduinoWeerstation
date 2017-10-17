@@ -1,4 +1,4 @@
-  #include <SPI.h>
+#include <SPI.h>
 #include <Ethernet2.h>
 #include <MemoryFree.h>
 #include "HttpRequest.h"
@@ -14,14 +14,30 @@ void setup() {
   Serial.println(freeMemory());
   //  startTime();
 
+
+/*
+
+  HttpHandler httpHandler = HttpHandler();
+  //  httpHandler.sendSignIn();
+
+  httpHandler.receiveNewConfig();
+
+  Serial.print(F("freeMemory()="));
+  Serial.println(freeMemory());
+*/
 }
 
 void loop() {
-  HttpHandler httpHandler = HttpHandler();
-  httpHandler.sendSignIn();
-  Meting meting = {"J2","timestamp",44.3, 34.7}; 
-  httpHandler.sendMeting(meting);
-  Serial.print(F("freeMemory()="));
-  Serial.println(freeMemory());
-  delay(6000);
+  
+    HttpHandler httpHandler = HttpHandler();
+ //   httpHandler.sendSignIn();
+  //  Meting meting = {"J2","timestamp",44.3, 34.7};
+    // httpHandler.sendMeting(meting);
+    
+      httpHandler.receiveNewConfig();
+
+    Serial.print(F("freeMemory()="));
+    Serial.println(freeMemory());
+//    delay(6000);
+  
 }

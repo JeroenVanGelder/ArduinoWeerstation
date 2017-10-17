@@ -77,20 +77,9 @@ void HttpRequest::addRequestHeader(char *key, char *value) {
 }
 
 void HttpRequest::freeRequest() {
-  //Alleen de onderste werkt op dit moment. Hier wordt aan gewerkt
-    //free(httpRequestLine.method);
   free(httpRequestLine.path);
-//    free(httpRequestLine.protocol);
-//    for(int i = 0; i < ammountOfHeaders; i++){
-//      free(httpRequestHeader[i].key);
-//      free(httpRequestHeader[i].value);
-//    }
   free(requestBody);
 }
-/*
-    temp voor SignIn functionaliteit
-*/
-
 
 void HttpRequest::addSignInToBody() {
 
@@ -99,31 +88,21 @@ void HttpRequest::addSignInToBody() {
   int ipFromEeprom = -1;
   ipFromEeprom = util.getId();
 
-
-  Serial.print(ipFromEeprom);
   if (ipFromEeprom != -1)
     signInJson = parseSignInToJsonBody(ipFromEeprom);
 
-  Serial.print(F("-------------------ARNE-"));
-  Serial.print(signInJson);
-  Serial.println(F("-------------------ARNE-"));
-
-
   bodySize = strlen(signInJson);
-
   requestBody = signInJson;
-
+  
   char* sizeString = new char[4];
+  
   itoa(bodySize, sizeString, 10);
-
   addRequestHeader("Content-Length: ", sizeString);
 }
 
 char* HttpRequest::parseSignInToJsonBody(int getal) {
   char* json = new char[20];
-
   StaticJsonBuffer<100> jsonBuffer;
-
   JsonObject& root = jsonBuffer.createObject();
   root["id"] = getal;
   root.printTo(json, 20);
