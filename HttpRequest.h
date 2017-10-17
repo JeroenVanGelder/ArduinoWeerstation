@@ -9,7 +9,7 @@ class HttpRequest
 {
   public:
     HttpRequest();
-    HttpRequest(char* inputMethod, char* inputPath, char* inputProtocol);
+    HttpRequest(char* inputMethod, char* inputPath);
         
     void addRequestHeader(char *key, char* value);
     void sendRequest(EthernetClient *client);

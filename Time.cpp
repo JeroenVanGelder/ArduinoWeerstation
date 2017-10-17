@@ -6,18 +6,23 @@ EthernetUDP udp;
 NTPClient timeClient(udp, "europe.pool.ntp.org", 7200, 60000);
 
 void startTime() {
-  Serial.print("getting time, ");
   timeClient.begin();
-  Serial.print("got time, ");
-  updateTime();
-  Serial.print("updated time\n");
 }
 
 void updateTime() {
-//  timeClient.update();
-//  timeClient.update();
-//  timeClient.update();
-//  timeClient.update();
+  Serial.print(F("getting time"));
+  udp.begin(8888);
+  Serial.print(F("."));
+  timeClient.update();
+  Serial.print(F("."));
+  timeClient.update();
+  Serial.print(F("."));
+  timeClient.update();
+  Serial.print(F("."));
+  timeClient.update();
+  Serial.print(F("."));
+  udp.stop();
+  Serial.print(F(".done"));
 }
 
 void endTime() {
@@ -25,10 +30,13 @@ void endTime() {
 }
 
 char* getTime() {
-  return getFormattedString();
+  String timeString = getFormattedString();
+  char timeCharArray[10];
+  strcpy(timeCharArray, timeString.c_str());
+  return timeCharArray;
 }
 
-char* getFormattedString(){
-  return ("%ul",timeClient.getEpochTime());
+String getFormattedString(){
+  return timeClient.getFormattedTime();
 }
 

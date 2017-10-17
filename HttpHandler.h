@@ -9,9 +9,10 @@ class HttpHandler
 {
   public:
     HttpHandler();
-    HttpHandler(HttpRequest inputRequest);
     
     void sendMeting(Meting meting);
+    void beginEthernet();
+    void updateTimeFromUDP();
     
   private:
     HttpRequest httpRequest;
@@ -21,6 +22,7 @@ class HttpHandler
     EthernetClient client;
 
     void printResponseToSerial();
+    void startTimeFromUDP();
     void freeRequest();
 };
 

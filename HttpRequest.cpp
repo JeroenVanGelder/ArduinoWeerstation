@@ -6,14 +6,14 @@
 
 HttpRequest::HttpRequest() {}
 
-HttpRequest::HttpRequest(char* inputMethod, char* inputPath, char* inputProtocol) {
+HttpRequest::HttpRequest(char* inputMethod, char* inputPath) {
   int strSize = (strlen("http://") + strlen(serverIP) + strlen(inputPath)) * sizeof(char);
   char* buildPath = malloc(strSize);
   strcpy (buildPath, "http://");
   strcpy (buildPath, serverIP);
   strcpy (buildPath, inputPath);
    
-  httpRequestLine = {inputMethod, buildPath, inputProtocol};
+  httpRequestLine = {inputMethod, buildPath, "HTTP/1.1 "};
   ammountOfHeaders = 0;
   bodySize = 0;
 }
@@ -61,11 +61,15 @@ char* HttpRequest::parseMetingToJsonBody(Meting inputMeting) {
   StaticJsonBuffer<100> jsonBuffer;
 
   JsonObject& root = jsonBuffer.createObject();
-  root["weatherstation"] = inputMeting.Weatherstation;
-  //root["Timestamp"] = inputMeting.Timestamp;
+  
+  JsonObject& station = root.createNestedObject("Weatherstation");
+  station["Name"] = inputMeting.Weatherstation;
+  root["timestamp"] = inputMeting.Timestamp;
   root["temperature"] = inputMeting.Temperature;
   root["illuminance"] = inputMeting.Illuminance;
+
   root.printTo(json, 100);
+  Serial.println(json);
   return json;
 }
 

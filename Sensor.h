@@ -1,3 +1,5 @@
+#ifndef sensor_h
+#define sensor_h
 #include <SPI.h>
 
 const int thermistorPin = A0;
@@ -18,3 +20,5 @@ float thermistorValue(int pin);
 float readTempValue(int pin);
 
 float readLightDepedentResistor(int pin);
+
+#endif

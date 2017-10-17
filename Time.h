@@ -8,4 +8,4 @@ void endTime() ;
 
 char* getTime();
 
-char* getFormattedString();
+String getFormattedString();

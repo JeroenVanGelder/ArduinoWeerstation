@@ -1,34 +1,40 @@
 
 #include "HttpHandler.h"
 #include "config.h"
-
+#include "Time.h"
 HttpHandler::HttpHandler(){
   ip.fromString(arduinoIP);
   server.fromString(serverIP);
+}
+
+void HttpHandler::beginEthernet(){
   Ethernet.begin(mac, ip);
 }
 
-HttpHandler::HttpHandler(HttpRequest inputRequest){
-  httpRequest = inputRequest;
-  ip.fromString(arduinoIP);
-  server.fromString(serverIP);
-  Ethernet.begin(mac, ip);
+void HttpHandler::freeRequest(){
+  httpRequest.freeRequest();
+}
+
+void HttpHandler:: startTimeFromUDP(){
+  startTime();
+}
+void HttpHandler:: updateTimeFromUDP(){
+  updateTime();
 }
 
 void HttpHandler::sendMeting(Meting meting){
-  httpRequest = HttpRequest("POST ","/api/meting/ ","HTTP/1.1 ");
+  httpRequest = HttpRequest("POST ","/api/meting/ ");
   
   httpRequest.addRequestHeader("Host: ",serverIP);
   httpRequest.addRequestHeader("Connection: ","close");
-  
+
   httpRequest.addMetingToBody(meting);
 
   Serial.println("\n");
   Serial.print("Connecting to ");
   Serial.print(server);  
   if (client.connect(server, 80)) {
-    
-    Serial.println("Connected to webserver");
+    Serial.println("\nConnected to webserver");
 
 //    //Test for Post
     httpRequest.sendRequest(&client);
@@ -38,10 +44,6 @@ void HttpHandler::sendMeting(Meting meting){
   }
   
   freeRequest();
-}
-
-void HttpHandler::freeRequest(){
-  httpRequest.freeRequest();
 }
 
 void HttpHandler::printResponseToSerial(){
