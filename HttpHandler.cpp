@@ -33,10 +33,9 @@ void HttpHandler::sendMeting(Meting meting){
   Serial.println("\n");
   Serial.print("Connecting to ");
   Serial.print(server);  
+  
   if (client.connect(server, 80)) {
     Serial.println("\nConnected to webserver");
-
-//    //Test for Post
     httpRequest.sendRequest(&client);
     printResponseToSerial();
   }else {
