@@ -37,6 +37,7 @@ void HttpHandler::sendMeting(Meting meting){
   Serial.println("\n");
   Serial.print("Connecting to ");
   Serial.print(server);  
+  Serial.print(" to send a meting");
   
   if (client.connect(server, 80)) {
     Serial.println("\nConnected to webserver");
@@ -72,7 +73,7 @@ void HttpHandler::printResponseToSerial(){
 
 void HttpHandler::sendSignIn() {
 
-  httpRequest = HttpRequest("POST ", "/arne/SignIn ", "HTTP/1.1 ");
+  httpRequest = HttpRequest("POST ", "/arne/SignIn ");
 
   httpRequest.addRequestHeader("Host: ", serverIP);
   httpRequest.addRequestHeader("Connection: ", "close");
@@ -83,6 +84,7 @@ void HttpHandler::sendSignIn() {
   Serial.println("\n");
   Serial.print("Connecting to ");
   Serial.print(server);
+  Serial.print(" for sign in");
   if (client.connect(server, 80)) {
     Serial.println("Connected to webserver");
     httpRequest.sendRequest(&client);

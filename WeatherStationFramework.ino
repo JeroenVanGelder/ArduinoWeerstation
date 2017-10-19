@@ -20,35 +20,24 @@ void setup() {
   Serial.println(freeMemory());
   
   weerstation = WeatherStation(TEMP_SENSOR);
+  
   httpHandler = HttpHandler(); 
+  
+  httpHandler.sendSignIn();
   httpHandler.beginEthernet();
+  
 }
 
 void loop() {
-  
+  httpHandler.receiveNewConfig();
   httpHandler.updateTimeFromUDP();
   
   Meting meting = weerstation.getNewMeting(getTime()); 
   
   httpHandler.sendMeting(meting);
   
-  httpHandler.receiveNewConfig();
+  
   Serial.print(F("freeMemory()="));
   Serial.println(freeMemory());
   delay(15000);
-}
-
-void loop() {
-  
-    HttpHandler httpHandler = HttpHandler();
- //   httpHandler.sendSignIn();
-  //  Meting meting = {"J2","timestamp",44.3, 34.7};
-    // httpHandler.sendMeting(meting);
-    
-      httpHandler.receiveNewConfig();
-
-    Serial.print(F("freeMemory()="));
-    Serial.println(freeMemory());
-//    delay(6000);
-  
 }
