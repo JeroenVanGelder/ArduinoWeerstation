@@ -98,3 +98,31 @@ void HttpRequest::freeRequest() {
   free(requestBody);
 }
 
+void HttpRequest::addSignInToBody() {
+
+  // @todo free up memory after ussage
+  char* signInJson;
+  int ipFromEeprom = -1;
+  ipFromEeprom = util.getId();
+
+  if (ipFromEeprom != -1)
+    signInJson = parseSignInToJsonBody(ipFromEeprom);
+
+  bodySize = strlen(signInJson);
+  requestBody = signInJson;
+  
+  char* sizeString = new char[4];
+  
+  itoa(bodySize, sizeString, 10);
+  addRequestHeader("Content-Length: ", sizeString);
+}
+
+char* HttpRequest::parseSignInToJsonBody(int getal) {
+  char* json = new char[20];
+  StaticJsonBuffer<100> jsonBuffer;
+  JsonObject& root = jsonBuffer.createObject();
+  root["id"] = getal;
+  root.printTo(json, 20);
+
+  return json;
+}
