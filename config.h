@@ -4,5 +4,5 @@
 #define serverIP "145.74.165.32"
 #define arduinoIP "10.42.0.2"
 #define TEMP_SENSOR 0
-
-#endif
+#include <MemoryFree.h>
+#endif  

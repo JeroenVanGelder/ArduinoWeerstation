@@ -10,35 +10,35 @@ void Util::parseGetIdJson(String json) {
   JsonObject& root = jsonBuffer.parseObject(json);
   
   if (!root.success()) {
-    Serial.println("parseObject() failed");
-    Serial.print(json);
+    Serial.println(F("parseObject() failed"));
+    
     return;
   }
-  
+  Serial.print(json);
   int id = root["Id"];
   char* ip = root["IpAddress"];
   char* name = root["Name"];
 
   writeId(id);
   writeIp(ip);
-  jsonBuffer.clear();
+  
+  //jsonBuffer.clear();
 }
 
 char* Util::parseMetingToJsonBody(Meting inputMeting) {
+
   char* json = new char[100];
   DynamicJsonBuffer jsonBuffer;
   JsonObject& root = jsonBuffer.createObject();
   
   JsonObject& station = root.createNestedObject("Weatherstation");
-  station["id"] = 54;
+  station["id"] = inputMeting.weatherStationId;
   root["timestamp"] = inputMeting.Timestamp;
   root["temperature"] = inputMeting.Temperature;
   root["illuminance"] = inputMeting.Illuminance;
 
   root.printTo(json, 100);
-  
-  Serial.println(json);
-  jsonBuffer.clear();
+
   return json;
 }
 
@@ -49,7 +49,7 @@ char* Util::parseSignInToJsonBody(int getal) {
   JsonObject& root = jsonBuffer.createObject();
   root["id"] = getal;
   root.printTo(json, 20);
-  jsonBuffer.clear();
+  //jsonBuffer.clear();
   return json;
 }
 

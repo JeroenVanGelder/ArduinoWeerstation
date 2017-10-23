@@ -39,6 +39,7 @@ class HttpRequest
     int bodySize;
 
     void addRequestBodyLine(char *inputRequestBodyLine);
+    void sendRequestLine(EthernetClient *client);
     void sendRequestHeader(HttpRequestHeader header, EthernetClient *client);
     char* parseMetingToJsonBody(Meting inputMeting);
 

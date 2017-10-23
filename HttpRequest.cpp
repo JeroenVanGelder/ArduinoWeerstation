@@ -22,30 +22,40 @@ HttpRequest::HttpRequest(char* inputMethod, char* inputPath) {
 }
 
 void  HttpRequest::sendRequest(EthernetClient *client) {
+  sendRequestLine(client);
+  
+  for (int i = 0; i < ammountOfHeaders; i++) {
+    sendRequestHeader(httpRequestHeader[i], client);
+  }
+  
+  client->println(); // always one empty line between headers and content
+  
+  if (bodySize > 0) {
+    client->println(requestBody);
+    free(requestBody);
+  }
+  free(httpRequestLine.path);
+  
+}
+
+void HttpRequest::sendRequestLine(EthernetClient *client){
   client->println();
   client->print(httpRequestLine.method);
   client->print(httpRequestLine.path);
   client->print(httpRequestLine.protocol);
   client->print("\n");
-  
-  for (int i = 0; i < ammountOfHeaders; i++) {
-    sendRequestHeader(httpRequestHeader[i], client);
-  }
-  client->println(); // always one empty line between headers and content
-  if (bodySize > 0) {
-    client->println(requestBody);
-  }
 }
 
 void HttpRequest::sendRequestHeader(HttpRequestHeader header, EthernetClient *client) {
   client->print(header.key);
   client->print(header.value);
-  client->print("\n");
+  client->print(F("\n"));
 }
 
 void HttpRequest::addMetingToBody(Meting inputMeting) {
 
   char* metingJson = util.parseMetingToJsonBody(inputMeting);
+
   bodySize = strlen(metingJson);
 
   requestBody = metingJson;
@@ -65,11 +75,11 @@ void HttpRequest::addRequestHeader(char *key, char *value) {
 }
 
 void HttpRequest::freeRequest() {
-  Serial.print("\nfree.");
-  free(httpRequestLine.path);
-  Serial.println(".");
-  delete(requestBody);
-  Serial.println(".");
+
+  //DIT GEBEURT NU TIJDENS HET VERSTUREN, ZIE REGEL 24/39 (ongeveer)
+  
+  //free(httpRequestLine.path);
+  //free(requestBody);
 }
 
 void HttpRequest::addSignInToBody() {

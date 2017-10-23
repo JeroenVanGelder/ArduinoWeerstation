@@ -4,8 +4,6 @@
 #include "Util.h"
 #include <ArduinoJson.h>
 
-Util util;
-
 HttpHandler::HttpHandler() {
   ip.fromString(arduinoIP);
   server.fromString(serverIP);
@@ -31,13 +29,13 @@ void HttpHandler::sendMeting(Meting meting){
   HttpRequest metingHttpRequest = buildRequestForSendMeting(meting);
   
   if (client.connect(server, 80)) {
-    Serial.println("\nConnected to webserver");
+    Serial.println(F("\nConnected to webserver"));
     metingHttpRequest.sendRequest(&client);
     printResponseToSerial();
   } else {
-    Serial.println("\nConnection failed");
+    Serial.println(F("\nConnection failed"));
   }
-
+  
   freeRequest();
 }
 
@@ -63,7 +61,7 @@ void HttpHandler::printResponseToSerial(){
   }
   if (!client.connected()) {
     client.stop();
-    Serial.println("disconnected...");
+    Serial.println(F("disconnected..."));
   }
 }
 
@@ -77,21 +75,16 @@ void HttpHandler::sendSignIn() {
 
   httpRequest.addSignInToBody();
 
-  Serial.println("\n");
-  Serial.print("Connecting to ");
-  Serial.print(server);
-  Serial.print(" for sign in");
   if (client.connect(server, 80)) {
-    Serial.println("Connected to webserver");
+    Serial.println(F("Connected to webserver"));
     httpRequest.sendRequest(&client);
     //printResponseToSerial();
     saveSignInResponse();
   }
   else {
-    Serial.println("Connection failed");
+    Serial.println(F("Connection failed"));
   }
   freeRequest();
-  Serial.print("free ready");
 }
 
 void HttpHandler::saveSignInResponse() {
@@ -121,10 +114,7 @@ void HttpHandler::saveSignInResponse() {
   
   util.parseGetIdJson(body);
 
-  Serial.println();
-  Serial.println(F("Response read, now we can disconnect."));
   if (!client.connected()) {
-    Serial.println(F("disconnecting..."));
     client.stop();
     Serial.println(F("disconnected..."));
 
