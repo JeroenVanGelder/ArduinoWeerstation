@@ -32,7 +32,7 @@ class HttpHandler
     void saveSignInResponse();
     void startTimeFromUDP();
     void freeRequest();
-    void parseJson(String json);
+    HttpRequest buildRequestForSendMeting(Meting meting);
 };
 
 #endif

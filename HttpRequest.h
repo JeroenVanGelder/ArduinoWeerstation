@@ -5,6 +5,7 @@
 #include <Ethernet2.h>
 #include "Meting.h"
 #include "Util.h"
+#include <ArduinoJson.h>
 
 
 class HttpRequest
@@ -33,7 +34,7 @@ class HttpRequest
     } httpRequestHeader[HEADERSIZE];
 
     char *requestBody;
-
+   
     int ammountOfHeaders;
     int bodySize;
 
@@ -43,6 +44,7 @@ class HttpRequest
 
     char* parseSignInToJsonBody(int getal);
     Util util;
+    
 
 
 

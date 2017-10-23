@@ -19,25 +19,26 @@ void setup() {
   Serial.print(F("freeMemory()="));
   Serial.println(freeMemory());
   
-  weerstation = WeatherStation(TEMP_SENSOR);
-  
   httpHandler = HttpHandler(); 
   
-  httpHandler.sendSignIn();
   httpHandler.beginEthernet();
   
+  httpHandler.sendSignIn();
+
+  weerstation = WeatherStation(TEMP_SENSOR);
 }
 
 void loop() {
-  httpHandler.receiveNewConfig();
+  
+  //httpHandler.receiveNewConfig();
   httpHandler.updateTimeFromUDP();
   
   Meting meting = weerstation.getNewMeting(getTime()); 
   
   httpHandler.sendMeting(meting);
   
-  
   Serial.print(F("freeMemory()="));
   Serial.println(freeMemory());
-  delay(15000);
+  delay(60000);
+//  
 }

@@ -1,7 +1,7 @@
 #include <Stepper.h>
 #include <ArduinoJson.h>
 #include "HttpRequest.h"
-#include <string.h>
+
 #include "config.h"
 
 HttpRequest::HttpRequest() {}
@@ -45,7 +45,7 @@ void HttpRequest::sendRequestHeader(HttpRequestHeader header, EthernetClient *cl
 
 void HttpRequest::addMetingToBody(Meting inputMeting) {
 
-  char* metingJson = parseMetingToJsonBody(inputMeting);
+  char* metingJson = util.parseMetingToJsonBody(inputMeting);
   bodySize = strlen(metingJson);
 
   requestBody = metingJson;
@@ -57,25 +57,6 @@ void HttpRequest::addMetingToBody(Meting inputMeting) {
   addRequestHeader("Content-Type: ","application/json");
 }
 
-char* HttpRequest::parseMetingToJsonBody(Meting inputMeting) {
-  char* json = new char[100];
-
-  StaticJsonBuffer<100> jsonBuffer;
-
-  JsonObject& root = jsonBuffer.createObject();
-  
-  JsonObject& station = root.createNestedObject("Weatherstation");
-  station["Name"] = inputMeting.Weatherstation;
-  root["timestamp"] = inputMeting.Timestamp;
-  root["temperature"] = inputMeting.Temperature;
-  root["illuminance"] = inputMeting.Illuminance;
-
-  root.printTo(json, 100);
-  
-  Serial.println(json);
-  return json;
-}
-
 void HttpRequest::addRequestHeader(char *key, char *value) {
   httpRequestHeader[ammountOfHeaders] = HttpRequestHeader{key, value};
   if (ammountOfHeaders < HEADERSIZE) {
@@ -84,18 +65,11 @@ void HttpRequest::addRequestHeader(char *key, char *value) {
 }
 
 void HttpRequest::freeRequest() {
-  //Alleen de onderste werkt op dit moment. Hier wordt aan gewerkt
-  //delete(httpRequestLine.method);
+  Serial.print("\nfree.");
   free(httpRequestLine.path);
-  //free(httpRequestLine.protocol);
-//  for (int i = 0; i < ammountOfHeaders; i++) {
-//    String header = httpRequestHeader[i].key;
-//    if(header.equals("Content-Type: ")){
-//      free(httpRequestHeader[i].key);
-//      free(httpRequestHeader[i].value);
-//    }
-//  }
-  free(requestBody);
+  Serial.println(".");
+  delete(requestBody);
+  Serial.println(".");
 }
 
 void HttpRequest::addSignInToBody() {
@@ -106,7 +80,7 @@ void HttpRequest::addSignInToBody() {
   ipFromEeprom = util.getId();
 
   if (ipFromEeprom != -1)
-    signInJson = parseSignInToJsonBody(ipFromEeprom);
+    signInJson = util.parseSignInToJsonBody(ipFromEeprom);
 
   bodySize = strlen(signInJson);
   requestBody = signInJson;
@@ -117,12 +91,3 @@ void HttpRequest::addSignInToBody() {
   addRequestHeader("Content-Length: ", sizeString);
 }
 
-char* HttpRequest::parseSignInToJsonBody(int getal) {
-  char* json = new char[20];
-  StaticJsonBuffer<100> jsonBuffer;
-  JsonObject& root = jsonBuffer.createObject();
-  root["id"] = getal;
-  root.printTo(json, 20);
-
-  return json;
-}

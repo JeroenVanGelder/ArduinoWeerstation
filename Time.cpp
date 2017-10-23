@@ -10,7 +10,7 @@ void startTime() {
 }
 
 void updateTime() {
-  Serial.print(F("getting time"));
+  Serial.print(F("\ngetting time"));
   udp.begin(8888);
   Serial.print(F("."));
   timeClient.update();
@@ -22,7 +22,7 @@ void updateTime() {
   timeClient.update();
   Serial.print(F("."));
   udp.stop();
-  Serial.print(F(".done"));
+  Serial.print(F(".done\n"));
 }
 
 void endTime() {

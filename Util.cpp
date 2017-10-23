@@ -1,8 +1,57 @@
 #include "Util.h"
 #include <EEPROM.h>
 #include <SPI.h>
+#include "config.h"
 
 Util::Util() {}
+
+void Util::parseGetIdJson(String json) {
+  StaticJsonBuffer<100> jsonBuffer;
+  JsonObject& root = jsonBuffer.parseObject(json);
+  
+  if (!root.success()) {
+    Serial.println("parseObject() failed");
+    Serial.print(json);
+    return;
+  }
+  
+  int id = root["Id"];
+  char* ip = root["IpAddress"];
+  char* name = root["Name"];
+
+  writeId(id);
+  writeIp(ip);
+  jsonBuffer.clear();
+}
+
+char* Util::parseMetingToJsonBody(Meting inputMeting) {
+  char* json = new char[100];
+  DynamicJsonBuffer jsonBuffer;
+  JsonObject& root = jsonBuffer.createObject();
+  
+  JsonObject& station = root.createNestedObject("Weatherstation");
+  station["id"] = 54;
+  root["timestamp"] = inputMeting.Timestamp;
+  root["temperature"] = inputMeting.Temperature;
+  root["illuminance"] = inputMeting.Illuminance;
+
+  root.printTo(json, 100);
+  
+  Serial.println(json);
+  jsonBuffer.clear();
+  return json;
+}
+
+
+char* Util::parseSignInToJsonBody(int getal) {
+  char* json = new char[20];
+  DynamicJsonBuffer jsonBuffer;
+  JsonObject& root = jsonBuffer.createObject();
+  root["id"] = getal;
+  root.printTo(json, 20);
+  jsonBuffer.clear();
+  return json;
+}
 
 int Util::getId() {
   int ID = EEPROM.read(0);
