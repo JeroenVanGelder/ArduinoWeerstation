@@ -32,6 +32,7 @@ void HttpHandler::sendMeting(Meting meting){
     Serial.println(F("\nConnected to webserver"));
     metingHttpRequest.sendRequest(&client);
     printResponseToSerial();
+    stopConnection();
   } else {
     Serial.println(F("\nConnection failed"));
   }
@@ -59,6 +60,9 @@ void HttpHandler::printResponseToSerial(){
     Serial.print(c);
     delay(1); // give input some time do to it's thingpie.
   }
+}
+
+void HttpHandler::stopConnection(){
   if (!client.connected()) {
     client.stop();
     Serial.println(F("disconnected..."));

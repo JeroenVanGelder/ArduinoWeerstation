@@ -39,6 +39,6 @@ void loop() {
   
   Serial.print(F("freeMemory()="));
   Serial.println(freeMemory());
-  delay(15000);
+  delay(10000);
 //  
 }

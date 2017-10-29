@@ -50,6 +50,11 @@ void HttpRequest::sendRequestHeader(HttpRequestHeader header, EthernetClient *cl
   client->print(header.key);
   client->print(header.value);
   client->print(F("\n"));
+
+  if(strcmp(header.key, "Content-Length: ") == 0){
+    free(header.value);
+    Serial.println("freed");
+  }
 }
 
 void HttpRequest::addMetingToBody(Meting inputMeting) {

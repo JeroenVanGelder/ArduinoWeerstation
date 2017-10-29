@@ -29,6 +29,7 @@ class HttpHandler
     Util util;
 
     void printResponseToSerial();
+    void stopConnection();
     void saveSignInResponse();
     void startTimeFromUDP();
     void freeRequest();
