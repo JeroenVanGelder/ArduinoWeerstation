@@ -4,54 +4,67 @@
 #include "Util.h"
 #include <ArduinoJson.h>
 
+//#define DEBUG 1
+
 HttpHandler::HttpHandler() {
   ip.fromString(arduinoIP);
   server.fromString(serverIP);
 }
 
-void HttpHandler::beginEthernet(){
+void HttpHandler::beginEthernet() {
   Ethernet.begin(mac, ip);
 }
 
-void HttpHandler::freeRequest(){
+void HttpHandler::freeRequest() {
   httpRequest.freeRequest();
 }
 
-void HttpHandler:: startTimeFromUDP(){
+void HttpHandler:: startTimeFromUDP() {
   startTime();
 }
-void HttpHandler:: updateTimeFromUDP(){
+void HttpHandler:: updateTimeFromUDP() {
   updateTime();
 }
 
-void HttpHandler::sendMeting(Meting meting){
-  
+void HttpHandler::sendMeting(Meting meting) {
+
   HttpRequest metingHttpRequest = buildRequestForSendMeting(meting);
-  
+
   if (client.connect(server, 80)) {
+
+#ifdef DEBUG
     Serial.println(F("\nConnected to webserver"));
+#endif
+
     metingHttpRequest.sendRequest(&client);
+
+#ifdef DEBUG
     printResponseToSerial();
+
+#endif
     stopConnection();
   } else {
+
+#ifdef DEBUG
     Serial.println(F("\nConnection failed"));
+#endif
   }
-  
+
   freeRequest();
 }
 
-HttpRequest HttpHandler::buildRequestForSendMeting(Meting meting){
-  HttpRequest returnHttpRequest = HttpRequest("POST ","/api/meting/ ");
-  
-  returnHttpRequest.addRequestHeader("Host: ",serverIP);
-  returnHttpRequest.addRequestHeader("Connection: ","close");
+HttpRequest HttpHandler::buildRequestForSendMeting(Meting meting) {
+  HttpRequest returnHttpRequest = HttpRequest("POST ", "/api/meting/ ");
+
+  returnHttpRequest.addRequestHeader("Host: ", serverIP);
+  returnHttpRequest.addRequestHeader("Connection: ", "close");
 
   returnHttpRequest.addMetingToBody(meting);
 
   return returnHttpRequest;
 }
- 
-void HttpHandler::printResponseToSerial(){
+
+void HttpHandler::printResponseToSerial() {
   while (!client.available()) {
     delay(5); // let's take five. Here we should check for time out
   }
@@ -62,10 +75,13 @@ void HttpHandler::printResponseToSerial(){
   }
 }
 
-void HttpHandler::stopConnection(){
+void HttpHandler::stopConnection() {
   if (!client.connected()) {
     client.stop();
+#ifdef DEBUG
     Serial.println(F("disconnected..."));
+#endif
+
   }
 }
 
@@ -80,9 +96,11 @@ void HttpHandler::sendSignIn() {
   httpRequest.addSignInToBody();
 
   if (client.connect(server, 80)) {
+#ifdef DEBUG
     Serial.println(F("Connected to webserver"));
+#endif
     httpRequest.sendRequest(&client);
-    //printResponseToSerial();
+
     saveSignInResponse();
   }
   else {
@@ -94,70 +112,39 @@ void HttpHandler::sendSignIn() {
 void HttpHandler::saveSignInResponse() {
   while (!client.available()) {
     delay(5); // let's take five. Here we should check for time out
+#ifdef DEBUG
     Serial.print(F("."));
+#endif
+
   }
+#ifdef DEBUG
   Serial.println(F("Response received:"));
+#endif
 
   bool bodyIsHere = false;
   String body;
   char newRule;
   while (client.available()) {
     char   c = client.read();
-    
+
     if (bodyIsHere)
       body += c;
 
     if (c == '\r')
       if (newRule == '\n')
         bodyIsHere = true;
-        
+
     newRule = c;
 
     delay(1); // give input some time do to it's thingpie.
   }
-  
+
   util.parseGetIdJson(body);
 
   if (!client.connected()) {
     client.stop();
+#ifdef DEBUG
     Serial.println(F("disconnected..."));
-
+#endif
   }
-}
-
-void HttpHandler::receiveNewConfig() {
-
-  Ethernet.begin(mac, ip);
-  Serial.println(Ethernet.localIP());
-
-  EthernetServer ConfigServer(80);
-  ConfigServer.begin();
-
-  EthernetClient ConfigClient = ConfigServer.available();
-  Serial.println(ConfigClient);
-  while (!ConfigClient) {}
-  if (ConfigClient) {
-    Serial.println("if");
-
-    while (ConfigClient.connected()) {
-      Serial.println("while");
-      if (ConfigClient.available()) {
-
-
-        Serial.print(ConfigClient.read());
-      }
-      ConfigClient.println("HTTP/1.1 404 OK");
-      ConfigClient.println("Content-Type: text/html");
-      ConfigClient.println("Connnection: close");
-      ConfigClient.println();
-      ConfigClient.println("<!DOCTYPE HTML>");
-      ConfigClient.println("<html><body>foutje</body></html>");
-    }
-
-
-  }
-  delay(1);
-
-  ConfigClient.stop();
-  Serial.println("Client disonnected");
 }

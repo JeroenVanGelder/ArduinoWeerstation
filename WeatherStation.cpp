@@ -4,8 +4,9 @@
 
 WeatherStation::WeatherStation(){}
 
-WeatherStation::WeatherStation(int tempPinNr){
+WeatherStation::WeatherStation(int tempPinNr, int illuPinNr){
   tempSensor = tempPinNr;
+  illuSensor = illuPinNr;
   weatherStationNameId = util.getId();
   weatherStationIp;
   weatherStationName = "EMPTY";
@@ -14,6 +15,7 @@ WeatherStation::WeatherStation(int tempPinNr){
   Meting WeatherStation::getNewMeting(char* metingTime){
     Meting tempMeting = {weatherStationNameId,metingTime,0, 34.7}; 
     tempMeting.Temperature = readTempValue(tempSensor);
+    tempMeting.Illuminance = readLightDepedentResistor(illuSensor);
     return tempMeting;
   }
 

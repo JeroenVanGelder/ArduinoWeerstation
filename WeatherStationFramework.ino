@@ -13,32 +13,36 @@ HttpHandler httpHandler;
 
 void setup() {
   Serial.begin(9600);
-  
+
+#ifdef DEBUG
   Serial.println(F("Starting"));
-  
   Serial.print(F("freeMemory()="));
   Serial.println(freeMemory());
-  
-  httpHandler = HttpHandler(); 
-  
+#endif
+
+  httpHandler = HttpHandler();
+
   httpHandler.beginEthernet();
-  
+
   httpHandler.sendSignIn();
 
-  weerstation = WeatherStation(TEMP_SENSOR);
+  weerstation = WeatherStation(TEMP_SENSOR, ILLU_SENSOR);
 }
 
 void loop() {
-  
+
   //httpHandler.receiveNewConfig();
   httpHandler.updateTimeFromUDP();
-  
-  Meting meting = weerstation.getNewMeting(getTime()); 
-  
+
+  Meting meting = weerstation.getNewMeting(getTime());
+
   httpHandler.sendMeting(meting);
-  
+
+#ifdef DEBUG
   Serial.print(F("freeMemory()="));
   Serial.println(freeMemory());
+#endif
+
   delay(10000);
-//  
+  
 }

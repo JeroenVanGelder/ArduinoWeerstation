@@ -11,17 +11,14 @@ void startTime() {
 
 void updateTime() {
   udp.begin(8888);
-  Serial.print(F("."));
   timeClient.update();
-  Serial.print(F("."));
   timeClient.update();
-  Serial.print(F("."));
   timeClient.update();
-  Serial.print(F("."));
   timeClient.update();
-  Serial.print(F("."));
   udp.stop();
-  Serial.print(F(".got time\n"));
+#ifdef DEBUG
+  Serial.print(F("got time\n"));
+#endif
 }
 
 void endTime() {
@@ -35,7 +32,7 @@ char* getTime() {
   return timeCharArray;
 }
 
-String getFormattedString(){
+String getFormattedString() {
   return timeClient.getFormattedTime();
 }
 

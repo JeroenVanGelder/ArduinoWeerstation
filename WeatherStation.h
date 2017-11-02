@@ -10,7 +10,7 @@ class WeatherStation
 {
   public:
     WeatherStation();
-    WeatherStation(int tempPinNr);
+    WeatherStation(int tempPinNr, int illuPinNr);
     Meting getNewMeting(char* metingTime);
     
     unsigned int weatherStationNameId;
@@ -19,6 +19,7 @@ class WeatherStation
     
   private:
     int tempSensor;
+    int illuSensor;
     Util util;
     
         

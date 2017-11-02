@@ -53,7 +53,6 @@ void HttpRequest::sendRequestHeader(HttpRequestHeader header, EthernetClient *cl
 
   if(strcmp(header.key, "Content-Length: ") == 0){
     free(header.value);
-    Serial.println("freed");
   }
 }
 

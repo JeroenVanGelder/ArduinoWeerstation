@@ -11,18 +11,15 @@ class HttpHandler
 {
   public:
     HttpHandler();
-    
+
     void sendMeting(Meting meting);
     void beginEthernet();
     void updateTimeFromUDP();
-    
-
     void sendSignIn();
 
-    void receiveNewConfig();
   private:
     HttpRequest httpRequest;
-    byte mac[6] = { 0x90, 0xA2, 0xDA, 0x0E, 0xF4, 0x66 };
+    byte mac[6] = { 0x92, 0xA2, 0xDA, 0x0E, 0xF4, 0x66 };
     IPAddress ip;
     IPAddress server;
     EthernetClient client;

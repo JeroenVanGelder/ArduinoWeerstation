@@ -17,6 +17,7 @@ float readTempValue(int pin) {
   logR = log(thermistorValue(pin) / THERMISTOR);
   temp = 1 / (SHa + (SHb * logR) + (SHc * logR * logR) + (SHd * logR * logR * logR)); //Temperature in Kelvin
   temp = temp - 273.15; // Convert Kelvin to Celsius
+  temp = temp + calibratieTemperatuur;
   return temp;
 }
 

@@ -7,8 +7,6 @@ struct Meting {
   char* Timestamp;
   double Temperature;
   double Illuminance;
-
-  //WeatherStation station;
 };
 
 #endif
