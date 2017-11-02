@@ -41,7 +41,7 @@ void HttpHandler::sendMeting(Meting meting){
 }
 
 HttpRequest HttpHandler::buildRequestForSendMeting(Meting meting){
-  HttpRequest returnHttpRequest = HttpRequest("POST ","/api/meting/ ");
+  HttpRequest returnHttpRequest = HttpRequest("POST ","/arne/api/meting/ ");
   
   returnHttpRequest.addRequestHeader("Host: ",serverIP);
   returnHttpRequest.addRequestHeader("Connection: ","close");
@@ -71,7 +71,7 @@ void HttpHandler::stopConnection(){
 
 void HttpHandler::sendSignIn() {
 
-  httpRequest = HttpRequest("POST ", "/SignIn ");
+  httpRequest = HttpRequest("POST ", "/arne/SignIn ");
 
   httpRequest.addRequestHeader("Host: ", serverIP);
   httpRequest.addRequestHeader("Connection: ", "close");
