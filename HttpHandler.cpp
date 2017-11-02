@@ -87,7 +87,7 @@ void HttpHandler::stopConnection() {
 
 void HttpHandler::sendSignIn() {
 
-  httpRequest = HttpRequest("POST ", "/SignIn ");
+  httpRequest = HttpRequest("POST ", "/arne/SignIn ");
 
   httpRequest.addRequestHeader("Host: ", serverIP);
   httpRequest.addRequestHeader("Connection: ", "close");

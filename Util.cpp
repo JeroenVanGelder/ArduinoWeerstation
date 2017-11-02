@@ -59,11 +59,8 @@ char* Util::parseSignInToJsonBody(int getal) {
 }
 
 int Util::getId() {
-  int ID = EEPROM.read(0);
-  if (ID >= 0 and ID < 256)
-    return ID;
+  return  EEPROM.read(0);
 
-  return 0;
 }
 
 int* Util::getIp() {
