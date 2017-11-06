@@ -11,7 +11,8 @@ class Util {
     Util(); 
    
     int getId(); 
-    int* getIp(); 
+    int* getIp();
+    char* getIpCharArray();
     void parseGetIdJson(String json);
     char* parseMetingToJsonBody(Meting inputMeting);
     char* parseSignInToJsonBody(int getal);

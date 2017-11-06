@@ -4,8 +4,6 @@
 #include "Util.h"
 #include <ArduinoJson.h>
 
-//#define DEBUG 1
-
 HttpHandler::HttpHandler() {
   ip.fromString(arduinoIP);
   server.fromString(serverIP);
@@ -13,6 +11,13 @@ HttpHandler::HttpHandler() {
 
 void HttpHandler::beginEthernet() {
   Ethernet.begin(mac, ip);
+}
+
+void HttpHandler::restartEthernetWithNewIP(char* newIP){
+  IPAddress newIPAddress;
+  newIPAddress.fromString(newIP);
+  Ethernet.begin(mac, newIPAddress);
+  free(newIP);
 }
 
 void HttpHandler::freeRequest() {
@@ -40,8 +45,8 @@ void HttpHandler::sendMeting(Meting meting) {
 
 #ifdef DEBUG
     printResponseToSerial();
-
 #endif
+
     stopConnection();
   } else {
 
@@ -87,7 +92,7 @@ void HttpHandler::stopConnection() {
 
 void HttpHandler::sendSignIn() {
 
-  httpRequest = HttpRequest("POST ", "/arne/SignIn ");
+  httpRequest = HttpRequest("POST ", "/SignIn ");
 
   httpRequest.addRequestHeader("Host: ", serverIP);
   httpRequest.addRequestHeader("Connection: ", "close");
@@ -112,11 +117,8 @@ void HttpHandler::sendSignIn() {
 void HttpHandler::saveSignInResponse() {
   while (!client.available()) {
     delay(5); // let's take five. Here we should check for time out
-#ifdef DEBUG
-    Serial.print(F("."));
-#endif
-
   }
+  
 #ifdef DEBUG
   Serial.println(F("Response received:"));
 #endif
@@ -126,16 +128,13 @@ void HttpHandler::saveSignInResponse() {
   char newRule;
   while (client.available()) {
     char   c = client.read();
-
     if (bodyIsHere)
       body += c;
 
     if (c == '\r')
       if (newRule == '\n')
         bodyIsHere = true;
-
     newRule = c;
-
     delay(1); // give input some time do to it's thingpie.
   }
 
@@ -147,4 +146,9 @@ void HttpHandler::saveSignInResponse() {
     Serial.println(F("disconnected..."));
 #endif
   }
+
+  char* tempIp = util.getIpCharArray();
+  restartEthernetWithNewIP(tempIp);
+  free(tempIp);
+  
 }

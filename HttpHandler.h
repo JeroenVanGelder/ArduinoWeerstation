@@ -14,6 +14,7 @@ class HttpHandler
 
     void sendMeting(Meting meting);
     void beginEthernet();
+    void restartEthernetWithNewIP(char* newIP);
     void updateTimeFromUDP();
     void sendSignIn();
 

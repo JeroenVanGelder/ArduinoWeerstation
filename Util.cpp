@@ -73,6 +73,23 @@ int* Util::getIp() {
   return  ip;
 }
 
+char* Util::getIpCharArray(){
+  int* tempIp = getIp();
+  char* ipString = new char[15];
+  
+  for(int i = 0; i < 4; i++){
+    char* tempCharArray = new char[4];
+    itoa(tempIp[i], tempCharArray, 10);
+    strcat (ipString, tempCharArray);
+    if(i != 3){
+      strcat (ipString, ".");
+    }
+    free(tempCharArray);
+  }
+  free(tempIp);
+  return ipString;
+}
+
 void Util::writeIp(char* myIp) {
   char *p = myIp;
   char *str;

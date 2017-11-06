@@ -30,8 +30,6 @@ void setup() {
 }
 
 void loop() {
-
-  //httpHandler.receiveNewConfig();
   httpHandler.updateTimeFromUDP();
 
   Meting meting = weerstation.getNewMeting(getTime());
@@ -43,6 +41,6 @@ void loop() {
   Serial.println(freeMemory());
 #endif
 
-  delay(10000);
+  delay(50000);
   
 }

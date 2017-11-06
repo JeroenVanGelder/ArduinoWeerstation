@@ -8,8 +8,9 @@ WeatherStation::WeatherStation(int tempPinNr, int illuPinNr){
   tempSensor = tempPinNr;
   illuSensor = illuPinNr;
   weatherStationNameId = util.getId();
-  weatherStationIp;
+  weatherStationIp = arduinoIP;
   weatherStationName = "EMPTY";
+  //Weatherstation ip, id en name worden nog niet gebruikt. Ze moeten worden opgeruimd of via de juiste functies worden aangeroepen.
 }
 
   Meting WeatherStation::getNewMeting(char* metingTime){
